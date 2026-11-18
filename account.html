@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>СантехМаркет — личный кабинет</title>
+<link rel="stylesheet" href="common.css">
+</head>
+<body>
+
+<header>
+<div class="hc">
+<a href="index.html" class="logo"><div class="li">🔧</div><div>Сантех<span style="color:#ff6b35">Маркет</span></div></a>
+<nav><ul>
+<li><a href="index.html">Главная</a></li>
+<li><a href="catalog.html">Каталог</a></li>
+<li><a href="account.html" class="active">Личный кабинет</a></li>
+</ul></nav>
+<div>
+<button class="btn ba" onclick="openAdmin()">⚙️ Админ</button>
+<button class="btn bo" onclick="openOrders()">📦 Заказы <span class="badge" id="ordersCount">0</span></button>
+<button class="btn bc" onclick="openCart()">🛒 Корзина <span class="badge" id="cartCount">0</span></button>
+</div>
+</div>
+</header>
+
+<section class="catalog" style="margin-top:30px">
+<h2 class="st">Личный кабинет</h2>
+<div style="max-width:820px;margin:0 auto;padding:0 20px 60px">
+
+  <div style="background:#fff;padding:24px;border-radius:14px;box-shadow:0 2px 8px rgba(0,0,0,.06);margin-bottom:20px">
+    <h3 style="color:#1a2332;margin-bottom:14px">📦 Мои заказы</h3>
+    <p style="color:#7a8595;font-size:14px;margin-bottom:14px">Здесь отображаются все ваши заказы, оформленные на этом устройстве.</p>
+    <button class="ckb" style="width:auto;padding:11px 24px" onclick="openOrders()">Показать мои заказы</button>
+  </div>
+
+  <div style="background:#fff;padding:24px;border-radius:14px;box-shadow:0 2px 8px rgba(0,0,0,.06);margin-bottom:20px">
+    <h3 style="color:#1a2332;margin-bottom:14px">⚙️ Панель администратора</h3>
+    <p style="color:#7a8595;font-size:14px;margin-bottom:14px">Управление заказами и работниками. Доступ по паролю.</p>
+    <button class="ckb" style="width:auto;padding:11px 24px" onclick="openAdmin()">Войти в админ-панель</button>
+  </div>
+
+  <div style="background:#fff;padding:24px;border-radius:14px;box-shadow:0 2px 8px rgba(0,0,0,.06)">
+    <h3 style="color:#1a2332;margin-bottom:14px">👷 Наши работники</h3>
+    <p style="color:#7a8595;font-size:14px;margin-bottom:14px">Сотрудники магазина и мастера. Управление — в админ-панели, вкладка «Работники».</p>
+    <div id="publicEmployees"></div>
+  </div>
+
+</div>
+</section>
+
+<footer>
+<div class="fcc">
+<div><h4>🔧 СантехМаркет</h4><p style="font-size:13px;line-height:1.7">Надёжный партнёр в ремонте с 2010 года.</p></div>
+<div><h4>Каталог</h4><ul>
+<li><a href="catalog.html">Смесители</a></li><li><a href="catalog.html">Унитазы</a></li>
+<li><a href="catalog.html">Ванны</a></li><li><a href="catalog.html">Плитка</a></li>
+<li><a href="catalog.html">Инструменты</a></li></ul></div>
+<div><h4>Покупателям</h4><ul>
+<li><a href="#">Доставка</a></li><li><a href="#">Возврат</a></li>
+<li><a href="#">Гарантия</a></li><li><a href="#">Акции</a></li></ul></div>
+<div><h4>📞 Контакты</h4><ul>
+<li>📱 8 (800) 555-35-35</li><li>✉️ info@santehmarket.ru</li>
+<li>📍 г. Москва, ул. Строителей, 15</li><li>🕐 Пн-Вс: 9:00-21:00</li></ul></div>
+</div>
+<div class="fb">© 2026 СантехМаркет. Все права защищены.</div>
+</footer>
+
+<!-- Корзина -->
+<div class="modal" id="cartModal"><div class="mc">
+<div class="mh"><h2>🛒 Корзина</h2><button class="cb" onclick="closeCart()">×</button></div>
+<div id="cartItems"></div><div id="cartFooter"></div>
+</div></div>
+
+<!-- Оформление заказа -->
+<div class="modal" id="checkoutModal"><div class="mc">
+<div class="mh"><h2>📝 Оформление заказа</h2><button class="cb" onclick="closeCheckout()">×</button></div>
+<form onsubmit="submitOrder(event)">
+<div class="fr">
+<div class="fg2"><label>Имя *</label><input id="custName" required placeholder="Иван"></div>
+<div class="fg2"><label>Фамилия *</label><input id="custSurname" required placeholder="Иванов"></div>
+</div>
+<div class="fr">
+<div class="fg2"><label>Телефон *</label><input type="tel" id="custPhone" required placeholder="+7 999 123-45-67"></div>
+<div class="fg2"><label>Email *</label><input type="email" required placeholder="mail@mail.ru"></div>
+</div>
+<div class="fg2"><label>Город *</label><input required placeholder="Москва"></div>
+<div class="fg2"><label>Адрес *</label><input required placeholder="ул. Ленина, 10"></div>
+<button type="submit" class="ckb">✓ Подтвердить заказ</button>
+</form>
+</div></div>
+
+<!-- Мои заказы -->
+<div class="modal" id="ordersModal"><div class="mc">
+<div class="mh"><h2>📦 Мои заказы</h2><button class="cb" onclick="closeOrders()">×</button></div>
+<div id="ordersList"></div>
+</div></div>
+
+<!-- Админка -->
+<div class="modal" id="adminModal"><div class="mc wide">
+<div class="mh"><h2>⚙️ Админ-панель</h2><button class="cb" onclick="closeAdmin()">×</button></div>
+<div class="tabs">
+<button class="tab active" onclick="switchTab('active',this)">📋 Активные</button>
+<button class="tab" onclick="switchTab('history',this)">📚 История заказов</button>
+<button class="tab" onclick="switchTab('employees',this)">👷 Работники</button>
+</div>
+<button class="eb add" onclick="addEmployee()" id="addEmpBtn" style="display:none">+ Добавить работника</button>
+<div id="adminBody"></div>
+<div id="employeesBody" style="display:none"></div>
+</div></div>
+
+<div class="toast" id="toast"></div>
+
+<script src="common.js"></script>
+<script>
+// Переопределяем switchTab, чтобы показывать кнопку добавления и контейнер работников
+const _origSwitch = window.switchTab;
+window.switchTab = function(tab, el){
+  _origSwitch(tab, el);
+  document.getElementById('addEmpBtn').style.display = tab === 'employees' ? 'block' : 'none';
+  document.getElementById('adminBody').style.display = tab === 'employees' ? 'none' : 'block';
+  document.getElementById('employeesBody').style.display = tab === 'employees' ? 'block' : 'none';
+  if (tab === 'employees') renderEmployees();
+};
+
+// Публичный список работников на странице (только чтение)
+function renderPublicEmployees(){
+  const box = document.getElementById('publicEmployees');
+  if (!employees.length){
+    box.innerHTML = '<p style="color:#7a8595;font-size:14px">Список пока пуст.</p>';
+    return;
+  }
+  box.innerHTML = employees.map(e => `
+    <div class="emp">
+      <div class="emp-info">
+        <div class="emp-name">${e.name}</div>
+        <div class="emp-role">${e.role}</div>
+        <div class="emp-phone">📞 ${e.phone}</div>
+      </div>
+    </div>`).join('');
+}
+
+// Перерисовываем публичный список после изменений в админке
+const _origRenderEmployees = window.renderEmployees;
+window.renderEmployees = function(){
+  _origRenderEmployees();
+  renderPublicEmployees();
+};
+
+renderPublicEmployees();
+</script>
+</body>
+</html>
